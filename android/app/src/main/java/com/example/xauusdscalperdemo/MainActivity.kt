@@ -1,6 +1,6 @@
 
 
-package com.example.xauusdscalper
+package com.example.xauusdscalperdemo
 
 
 import android.os.Bundle
