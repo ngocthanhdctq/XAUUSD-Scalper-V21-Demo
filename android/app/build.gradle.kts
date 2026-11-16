@@ -3,6 +3,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -32,6 +33,7 @@ android {
 }
 
 dependencies {
+    // Jetpack Compose
     implementation(platform("androidx.compose:compose-bom:2024.09.03"))
     implementation("androidx.activity:activity-compose:1.9.2")
     implementation("androidx.compose.ui:ui")
@@ -39,10 +41,12 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended")
 
-implementation(platform("com.google.firebase:firebase-bom:35.2.0"))
-implementation("com.google.firebase:firebase-auth")
-implementation("com.google.firebase:firebase-firestore")
-implementation("com.google.firebase:firebase-messaging")
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:35.2.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-messaging")
 
+    // Debug
     debugImplementation("androidx.compose.ui:ui-tooling")
 }
