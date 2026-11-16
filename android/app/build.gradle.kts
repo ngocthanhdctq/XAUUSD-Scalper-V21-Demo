@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.xauusdscalperdemo"
+    namespace = "com.example.xauusdscalper"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.xauusdscalperdemo"
+        applicationId = "com.example.xauusdscalper.demo"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -38,6 +38,11 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended")
+
+implementation(platform("com.google.firebase:firebase-bom:35.2.0"))
+implementation("com.google.firebase:firebase-auth")
+implementation("com.google.firebase:firebase-firestore")
+implementation("com.google.firebase:firebase-messaging")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
 }
