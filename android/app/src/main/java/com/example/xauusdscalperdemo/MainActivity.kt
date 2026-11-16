@@ -1,15 +1,13 @@
 
-
 package com.example.xauusdscalperdemo
-
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.Locale
 
 private val Bg = Color(0xFF101722)
 private val Panel = Color(0xFF1B2736)
@@ -42,9 +41,13 @@ class MainActivity : ComponentActivity() {
 fun DemoDashboard() {
     var auto by remember { mutableStateOf(false) }
     var balance by remember { mutableStateOf(1000.0) }
-    var trades by remember { mutableStateOf(0) }
+    var trades by remember { mutableIntStateOf(0) }
     var message by remember {
         mutableStateOf("Sẵn sàng mô phỏng")
+    }
+
+    var riskPercent by remember {
+        mutableFloatStateOf(2f)
     }
 
     var showHistory by remember {
@@ -59,10 +62,13 @@ fun DemoDashboard() {
         mutableStateListOf<String>()
     }
 
+    val riskBudget = balance * riskPercent / 100.0
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Bg)
+            .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
         Text(
@@ -85,13 +91,13 @@ fun DemoDashboard() {
         ) {
             InfoCard(
                 "BALANCE",
-                "$" + "%.2f".format(balance),
+                "$" + String.format(Locale.US, "%.2f", balance),
                 Modifier.weight(1f)
             )
 
             InfoCard(
                 "EQUITY",
-                "$" + "%.2f".format(balance),
+                "$" + String.format(Locale.US, "%.2f", balance),
                 Modifier.weight(1f)
             )
         }
@@ -104,8 +110,155 @@ fun DemoDashboard() {
             Modifier.fillMaxWidth()
         )
 
-        Spacer(Modifier.height(14.dp))
+        Spacer(Modifier.height(16.dp))
 
+        // QUẢN LÝ RỦI RO
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = Panel
+            ),
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    "QUẢN LÝ VỐN & RỦI RO",
+                    color = Green,
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(Modifier.height(14.dp))
+
+                Text(
+                    "MỨC RỦI RO",
+                    color = White,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(Modifier.height(6.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        "Tỷ lệ rủi ro",
+                        color = Color.LightGray
+                    )
+
+                    Text(
+                        String.format(Locale.US, "%.1f%%", riskPercent),
+                        color = Green,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Slider(
+                    value = riskPercent,
+                    onValueChange = {
+                        riskPercent = it
+                    },
+                    valueRange = 2f..10f,
+                    steps = 15,
+                    colors = SliderDefaults.colors(
+                        thumbColor = Green,
+                        activeTrackColor = Green
+                    )
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("2%", color = Color.LightGray)
+                    Text("10%", color = Color.LightGray)
+                }
+
+                Spacer(Modifier.height(14.dp))
+
+                Divider(color = Color.DarkGray)
+
+                Spacer(Modifier.height(14.dp))
+
+                Text(
+                    "NGÂN SÁCH RỦI RO TỐI ĐA",
+                    color = Color.LightGray,
+                    fontSize = 12.sp
+                )
+
+                Text(
+                    "$" + String.format(Locale.US, "%.2f", riskBudget),
+                    color = Green,
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    "Tính theo Balance: $" +
+                        String.format(Locale.US, "%.2f", balance),
+                    color = White,
+                    fontSize = 12.sp
+                )
+
+                Spacer(Modifier.height(14.dp))
+
+                Text(
+                    "PHẠM VI TÍNH RỦI RO",
+                    color = Color.LightGray,
+                    fontSize = 12.sp
+                )
+
+                Text(
+                    "Chỉ lệnh do EA Scalper V2.1 mở",
+                    color = White,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                Text(
+                    "QUẢN LÝ LOT",
+                    color = Color.LightGray,
+                    fontSize = 12.sp
+                )
+
+                Text(
+                    "EA tự tính Lot theo Entry và SL",
+                    color = Green,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    "SL/TP tiếp tục do EA quản lý.",
+                    color = White,
+                    fontSize = 12.sp
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                Text(
+                    "EA CONNECTION: CHƯA KẾT NỐI",
+                    color = Red,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    "Số liệu rủi ro hiện là mô phỏng, chưa lấy từ MT5.",
+                    color = Color.LightGray,
+                    fontSize = 11.sp
+                )
+            }
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        // AUTO
         Card(
             colors = CardDefaults.cardColors(
                 containerColor = Panel
@@ -147,7 +300,7 @@ fun DemoDashboard() {
             }
         }
 
-        Spacer(Modifier.height(14.dp))
+        Spacer(Modifier.height(16.dp))
 
         Text(
             "MANUAL TRADING",
@@ -163,12 +316,9 @@ fun DemoDashboard() {
             Button(
                 onClick = {
                     trades++
-
                     val entry = "BUY XAUUSD • DEMO"
-
                     history.add(entry)
                     tradeHistory.add("MỞ LỆNH • $entry")
-
                     message = "Đã mô phỏng lệnh BUY"
                 },
                 modifier = Modifier.weight(1f),
@@ -182,12 +332,9 @@ fun DemoDashboard() {
             Button(
                 onClick = {
                     trades++
-
                     val entry = "SELL XAUUSD • DEMO"
-
                     history.add(entry)
                     tradeHistory.add("MỞ LỆNH • $entry")
-
                     message = "Đã mô phỏng lệnh SELL"
                 },
                 modifier = Modifier.weight(1f),
@@ -210,7 +357,6 @@ fun DemoDashboard() {
                 }
 
                 history.clear()
-
                 message = "Đã mô phỏng đóng $count lệnh"
             },
             modifier = Modifier.fillMaxWidth()
@@ -218,7 +364,7 @@ fun DemoDashboard() {
             Text("ĐÓNG TẤT CẢ LỆNH MÔ PHỎNG")
         }
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(14.dp))
 
         Text(
             "TRẠNG THÁI",
@@ -232,7 +378,7 @@ fun DemoDashboard() {
             fontSize = 13.sp
         )
 
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(12.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -249,42 +395,32 @@ fun DemoDashboard() {
                     showHistory = true
                 }
             ) {
-                Text(
-                    "LỊCH SỬ",
-                    color = Green
-                )
+                Text("LỊCH SỬ", color = Green)
             }
         }
 
-        HorizontalDivider(color = Color.DarkGray)
+        Divider(color = Color.DarkGray)
 
-        LazyColumn(
-            modifier = Modifier.weight(1f)
-        ) {
-            items(history.reversed()) { item ->
-                Text(
-                    item,
-                    color = White,
-                    modifier = Modifier.padding(vertical = 9.dp)
-                )
-
-                HorizontalDivider(
-                    color = Color.DarkGray
-                )
-            }
+        history.reversed().forEach { item ->
+            Text(
+                item,
+                color = White,
+                modifier = Modifier.padding(vertical = 9.dp)
+            )
+            Divider(color = Color.DarkGray)
         }
+
+        Spacer(Modifier.height(24.dp))
 
         Text(
             "SIMULATION ONLY • NO REAL ORDERS",
             color = Green,
             fontSize = 10.sp,
-            modifier = Modifier.align(
-                Alignment.CenterHorizontally
-            )
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         )
     }
 
-    // HỘP THOẠI LỊCH SỬ GIAO DỊCH
+    // LỊCH SỬ
     if (showHistory) {
         AlertDialog(
             onDismissRequest = {
@@ -297,20 +433,17 @@ fun DemoDashboard() {
                 if (tradeHistory.isEmpty()) {
                     Text("Chưa có giao dịch nào.")
                 } else {
-                    LazyColumn(
-                        modifier = Modifier.heightIn(
-                            max = 350.dp
-                        )
+                    Column(
+                        modifier = Modifier
+                            .heightIn(max = 350.dp)
+                            .verticalScroll(rememberScrollState())
                     ) {
-                        items(tradeHistory.reversed()) { item ->
+                        tradeHistory.reversed().forEach { item ->
                             Text(
                                 item,
-                                modifier = Modifier.padding(
-                                    vertical = 8.dp
-                                )
+                                modifier = Modifier.padding(vertical = 8.dp)
                             )
-
-                            HorizontalDivider()
+                            Divider()
                         }
                     }
                 }
