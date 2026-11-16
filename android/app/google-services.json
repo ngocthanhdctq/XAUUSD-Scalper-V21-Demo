@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "906141301504",
+    "project_id": "xauusd-scalper-v21",
+    "storage_bucket": "xauusd-scalper-v21.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906141301504:android:9290287b7d84616498d1e5",
+        "android_client_info": {
+          "package_name": "com.example.xauusdscalper.demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDldgTa2ZRZ8e7OUuDSkqK0_mh8Oh3_Pak"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
