@@ -27,6 +27,7 @@ private val White = Color(0xFFF4F7FA)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             MaterialTheme {
                 DemoDashboard()
@@ -40,13 +41,22 @@ fun DemoDashboard() {
     var auto by remember { mutableStateOf(false) }
     var balance by remember { mutableStateOf(1000.0) }
     var trades by remember { mutableStateOf(0) }
-    var message by remember { mutableStateOf("Sẵn sàng mô phỏng") }
-    val history = remember { mutableStateListOf<String>() }
-var showHistory by remember { mutableStateOf(false) }
+    var message by remember {
+        mutableStateOf("Sẵn sàng mô phỏng")
+    }
 
-val tradeHistory = remember {
-    mutableStateListOf<String>()
-}
+    var showHistory by remember {
+        mutableStateOf(false)
+    }
+
+    val history = remember {
+        mutableStateListOf<String>()
+    }
+
+    val tradeHistory = remember {
+        mutableStateListOf<String>()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -59,6 +69,7 @@ val tradeHistory = remember {
             fontSize = 23.sp,
             fontWeight = FontWeight.Bold
         )
+
         Text(
             "VERSION 2.1 • DEMO MODE",
             color = Color.LightGray,
@@ -67,11 +78,20 @@ val tradeHistory = remember {
 
         Spacer(Modifier.height(18.dp))
 
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            InfoCard("BALANCE", "$" + "%.2f".format(balance),
-                Modifier.weight(1f))
-            InfoCard("EQUITY", "$" + "%.2f".format(balance),
-                Modifier.weight(1f))
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            InfoCard(
+                "BALANCE",
+                "$" + "%.2f".format(balance),
+                Modifier.weight(1f)
+            )
+
+            InfoCard(
+                "EQUITY",
+                "$" + "%.2f".format(balance),
+                Modifier.weight(1f)
+            )
         }
 
         Spacer(Modifier.height(12.dp))
@@ -85,12 +105,17 @@ val tradeHistory = remember {
         Spacer(Modifier.height(14.dp))
 
         Card(
-            colors = CardDefaults.cardColors(containerColor = Panel),
+            colors = CardDefaults.cardColors(
+                containerColor = Panel
+            ),
             shape = RoundedCornerShape(16.dp)
         ) {
             Column(Modifier.padding(16.dp)) {
-                Text("AUTO TRADING", color = White,
-                    fontWeight = FontWeight.Bold)
+                Text(
+                    "AUTO TRADING",
+                    color = White,
+                    fontWeight = FontWeight.Bold
+                )
 
                 Spacer(Modifier.height(8.dp))
 
@@ -100,16 +125,20 @@ val tradeHistory = remember {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        if (auto) "AUTO ĐANG BẬT" else "AUTO ĐANG TẮT",
+                        if (auto) "AUTO ĐANG BẬT"
+                        else "AUTO ĐANG TẮT",
                         color = if (auto) Green else Red
                     )
+
                     Switch(
                         checked = auto,
                         onCheckedChange = {
                             auto = it
-                            message = if (it)
+                            message = if (it) {
                                 "AUTO Demo đã bật"
-                            else "AUTO Demo đã tắt"
+                            } else {
+                                "AUTO Demo đã tắt"
+                            }
                         }
                     )
                 }
@@ -118,20 +147,28 @@ val tradeHistory = remember {
 
         Spacer(Modifier.height(14.dp))
 
-        Text("MANUAL TRADING", color = White,
-            fontWeight = FontWeight.Bold)
+        Text(
+            "MANUAL TRADING",
+            color = White,
+            fontWeight = FontWeight.Bold
+        )
 
         Spacer(Modifier.height(10.dp))
 
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
             Button(
                 onClick = {
-    trades++
-    val entry = "BUY XAUUSD • DEMO"
-    history.add(entry)
-    tradeHistory.add("MỞ LỆNH • $entry")
-    message = "Đã mô phỏng lệnh BUY"
-                }
+                    trades++
+
+                    val entry = "BUY XAUUSD • DEMO"
+
+                    history.add(entry)
+                    tradeHistory.add("MỞ LỆNH • $entry")
+
+                    message = "Đã mô phỏng lệnh BUY"
+                },
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Green
@@ -142,12 +179,15 @@ val tradeHistory = remember {
 
             Button(
                 onClick = {
-    trades++
-    val entry = "SELL XAUUSD • DEMO"
-    history.add(entry)
-    tradeHistory.add("MỞ LỆNH • $entry")
-    message = "Đã mô phỏng lệnh SELL"
-                }
+                    trades++
+
+                    val entry = "SELL XAUUSD • DEMO"
+
+                    history.add(entry)
+                    tradeHistory.add("MỞ LỆNH • $entry")
+
+                    message = "Đã mô phỏng lệnh SELL"
+                },
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Red
@@ -160,96 +200,132 @@ val tradeHistory = remember {
         Spacer(Modifier.height(10.dp))
 
         OutlinedButton(
-    onClick = {
-        val count = history.size
+            onClick = {
+                val count = history.size
 
-        history.forEach { entry ->
-            tradeHistory.add("ĐÃ ĐÓNG • $entry")
+                history.forEach { entry ->
+                    tradeHistory.add("ĐÃ ĐÓNG • $entry")
+                }
+
+                history.clear()
+
+                message = "Đã mô phỏng đóng $count lệnh"
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("ĐÓNG TẤT CẢ LỆNH MÔ PHỎNG")
         }
-
-        history.clear()
-        message = "Đã mô phỏng đóng $count lệnh"
-    },
-    modifier = Modifier.fillMaxWidth()
-) {
-    Text("ĐÓNG TẤT CẢ LỆNH MÔ PHỎNG")
-}
 
         Spacer(Modifier.height(12.dp))
 
-        Text("TRẠNG THÁI", color = Green,
-            fontWeight = FontWeight.Bold)
+        Text(
+            "TRẠNG THÁI",
+            color = Green,
+            fontWeight = FontWeight.Bold
+        )
 
-        Text(message, color = White, fontSize = 13.sp)
+        Text(
+            message,
+            color = White,
+            fontSize = 13.sp
+        )
 
         Spacer(Modifier.height(10.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("TỔNG LỆNH: $trades", color = White)
+            Text(
+                "TỔNG LỆNH: $trades",
+                color = White
+            )
+
             TextButton(
-    onClick = {
-        showHistory = true
-    }
-) {
-    Text(
-        "LỊCH SỬ",
-        color = Green
-    )
+                onClick = {
+                    showHistory = true
+                }
+            ) {
+                Text(
+                    "LỊCH SỬ",
+                    color = Green
+                )
             }
+        }
 
         HorizontalDivider(color = Color.DarkGray)
 
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier.weight(1f)
+        ) {
             items(history.reversed()) { item ->
                 Text(
                     item,
                     color = White,
                     modifier = Modifier.padding(vertical = 9.dp)
                 )
-                HorizontalDivider(color = Color.DarkGray)
+
+                HorizontalDivider(
+                    color = Color.DarkGray
+                )
             }
         }
-
-        Spacer(Modifier.weight(1f))
 
         Text(
             "SIMULATION ONLY • NO REAL ORDERS",
             color = Green,
             fontSize = 10.sp,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier.align(
+                Alignment.CenterHorizontally
+            )
+        )
+    }
+
+    // HỘP THOẠI LỊCH SỬ GIAO DỊCH
+    if (showHistory) {
+        AlertDialog(
+            onDismissRequest = {
+                showHistory = false
+            },
+            title = {
+                Text("LỊCH SỬ GIAO DỊCH")
+            },
+            text = {
+                if (tradeHistory.isEmpty()) {
+                    Text("Chưa có giao dịch nào.")
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.heightIn(
+                            max = 350.dp
+                        )
+                    ) {
+                        items(tradeHistory.reversed()) { item ->
+                            Text(
+                                item,
+                                modifier = Modifier.padding(
+                                    vertical = 8.dp
+                                )
+                            )
+
+                            HorizontalDivider()
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showHistory = false
+                    }
+                ) {
+                    Text("ĐÓNG")
+                }
+            }
         )
     }
 }
-if (showHistory) {
-    AlertDialog(
-        onDismissRequest = {
-            showHistory = false
-        },
-        title = {
-            Text("LỊCH SỬ GIAO DỊCH")
-        },
-        text = {
-            Text(
-                text = if (tradeHistory.isEmpty()) {
-                    "Chưa có giao dịch nào."
-                } else {
-                    tradeHistory.reversed().joinToString("\n\n")
-                }
-            )
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    showHistory = false
-                }
-            ) {
-                Text("ĐÓNG")
-            }
-        }
-    )
-}
+
 @Composable
 fun InfoCard(
     title: String,
@@ -258,12 +334,20 @@ fun InfoCard(
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = Panel),
+        colors = CardDefaults.cardColors(
+            containerColor = Panel
+        ),
         shape = RoundedCornerShape(14.dp)
     ) {
         Column(Modifier.padding(14.dp)) {
-            Text(title, color = Color.LightGray, fontSize = 11.sp)
+            Text(
+                title,
+                color = Color.LightGray,
+                fontSize = 11.sp
+            )
+
             Spacer(Modifier.height(5.dp))
+
             Text(
                 value,
                 color = White,
