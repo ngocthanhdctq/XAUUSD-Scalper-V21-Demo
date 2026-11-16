@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.xauusdscalper"
+    namespace = "com.example.xauusdscalperdemo"
     compileSdk = 35
 
     defaultConfig {
