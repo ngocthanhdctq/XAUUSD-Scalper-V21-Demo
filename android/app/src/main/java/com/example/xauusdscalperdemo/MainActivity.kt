@@ -42,7 +42,11 @@ fun DemoDashboard() {
     var trades by remember { mutableStateOf(0) }
     var message by remember { mutableStateOf("Sẵn sàng mô phỏng") }
     val history = remember { mutableStateListOf<String>() }
+var showHistory by remember { mutableStateOf(false) }
 
+val tradeHistory = remember {
+    mutableStateListOf<String>()
+}
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -156,7 +160,6 @@ fun DemoDashboard() {
         Spacer(Modifier.height(10.dp))
 
         OutlinedButton(
-            OutlinedButton(
     onClick = {
         val count = history.size
 
@@ -170,7 +173,7 @@ fun DemoDashboard() {
     modifier = Modifier.fillMaxWidth()
 ) {
     Text("ĐÓNG TẤT CẢ LỆNH MÔ PHỎNG")
-            }
+}
 
         Spacer(Modifier.height(12.dp))
 
@@ -181,8 +184,7 @@ fun DemoDashboard() {
 
         Spacer(Modifier.height(10.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
+        Row(modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("TỔNG LỆNH: $trades", color = White)
