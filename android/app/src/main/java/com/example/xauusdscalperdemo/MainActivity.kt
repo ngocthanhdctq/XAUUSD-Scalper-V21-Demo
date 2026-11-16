@@ -122,10 +122,12 @@ fun DemoDashboard() {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Button(
                 onClick = {
-                    trades++
-                    history.add("BUY XAUUSD • DEMO")
-                    message = "Đã mô phỏng lệnh BUY"
-                },
+    trades++
+    val entry = "BUY XAUUSD • DEMO"
+    history.add(entry)
+    tradeHistory.add("MỞ LỆNH • $entry")
+    message = "Đã mô phỏng lệnh BUY"
+                }
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Green
@@ -136,10 +138,12 @@ fun DemoDashboard() {
 
             Button(
                 onClick = {
-                    trades++
-                    history.add("SELL XAUUSD • DEMO")
-                    message = "Đã mô phỏng lệnh SELL"
-                },
+    trades++
+    val entry = "SELL XAUUSD • DEMO"
+    history.add(entry)
+    tradeHistory.add("MỞ LỆNH • $entry")
+    message = "Đã mô phỏng lệnh SELL"
+                }
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Red
@@ -152,15 +156,21 @@ fun DemoDashboard() {
         Spacer(Modifier.height(10.dp))
 
         OutlinedButton(
-            onClick = {
-                val count = history.size
-                history.clear()
-                message = "Đã mô phỏng đóng $count lệnh"
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("ĐÓNG TẤT CẢ LỆNH MÔ PHỎNG")
+            OutlinedButton(
+    onClick = {
+        val count = history.size
+
+        history.forEach { entry ->
+            tradeHistory.add("ĐÃ ĐÓNG • $entry")
         }
+
+        history.clear()
+        message = "Đã mô phỏng đóng $count lệnh"
+    },
+    modifier = Modifier.fillMaxWidth()
+) {
+    Text("ĐÓNG TẤT CẢ LỆNH MÔ PHỎNG")
+            }
 
         Spacer(Modifier.height(12.dp))
 
@@ -176,8 +186,16 @@ fun DemoDashboard() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("TỔNG LỆNH: $trades", color = White)
-            Text("LỊCH SỬ", color = Green)
-        }
+            TextButton(
+    onClick = {
+        showHistory = true
+    }
+) {
+    Text(
+        "LỊCH SỬ",
+        color = Green
+    )
+            }
 
         HorizontalDivider(color = Color.DarkGray)
 
@@ -202,7 +220,34 @@ fun DemoDashboard() {
         )
     }
 }
-
+if (showHistory) {
+    AlertDialog(
+        onDismissRequest = {
+            showHistory = false
+        },
+        title = {
+            Text("LỊCH SỬ GIAO DỊCH")
+        },
+        text = {
+            Text(
+                text = if (tradeHistory.isEmpty()) {
+                    "Chưa có giao dịch nào."
+                } else {
+                    tradeHistory.reversed().joinToString("\n\n")
+                }
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    showHistory = false
+                }
+            ) {
+                Text("ĐÓNG")
+            }
+        }
+    )
+}
 @Composable
 fun InfoCard(
     title: String,
